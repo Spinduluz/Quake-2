@@ -1,0 +1,8 @@
+.git/**
+.git/**/**
+**/*.obj
+**/*.suo
+**/*.sdf
+**/objs/**
+**/ref_gl/objs/**
+**/game/objs/**

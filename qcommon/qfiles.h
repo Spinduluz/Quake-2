@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -33,14 +33,12 @@ The .pak files are just a linear collapse of a directory tree
 
 #define IDPAKHEADER		(('K'<<24)+('C'<<16)+('A'<<8)+'P')
 
-typedef struct
-{
-	char	name[56];
+typedef struct {
+	char	name[ 56 ];
 	int		filepos, filelen;
 } dpackfile_t;
 
-typedef struct
-{
+typedef struct {
 	int		ident;		// == IDPAKHEADER
 	int		dirofs;
 	int		dirlen;
@@ -57,21 +55,20 @@ PCX files are used for as many images as possible
 ========================================================================
 */
 
-typedef struct
-{
-    char	manufacturer;
-    char	version;
-    char	encoding;
-    char	bits_per_pixel;
-    unsigned short	xmin,ymin,xmax,ymax;
-    unsigned short	hres,vres;
-    unsigned char	palette[48];
-    char	reserved;
-    char	color_planes;
-    unsigned short	bytes_per_line;
-    unsigned short	palette_type;
-    char	filler[58];
-    unsigned char	data;			// unbounded
+typedef struct {
+	char	manufacturer;
+	char	version;
+	char	encoding;
+	char	bits_per_pixel;
+	unsigned short	xmin, ymin, xmax, ymax;
+	unsigned short	hres, vres;
+	unsigned char	palette[ 48 ];
+	char	reserved;
+	char	color_planes;
+	unsigned short	bytes_per_line;
+	unsigned short	palette_type;
+	char	filler[ 58 ];
+	unsigned char	data;			// unbounded
 } pcx_t;
 
 
@@ -92,21 +89,18 @@ typedef struct
 #define MAX_MD2SKINS	32
 #define	MAX_SKINNAME	64
 
-typedef struct
-{
+typedef struct {
 	short	s;
 	short	t;
 } dstvert_t;
 
-typedef struct 
-{
-	short	index_xyz[3];
-	short	index_st[3];
+typedef struct {
+	short	index_xyz[ 3 ];
+	short	index_st[ 3 ];
 } dtriangle_t;
 
-typedef struct
-{
-	byte	v[3];			// scaled byte to fit in frame mins/maxs
+typedef struct {
+	byte	v[ 3 ];			// scaled byte to fit in frame mins/maxs
 	byte	lightnormalindex;
 } dtrivertx_t;
 
@@ -116,12 +110,11 @@ typedef struct
 #define DTRIVERTX_LNI  3
 #define DTRIVERTX_SIZE 4
 
-typedef struct
-{
-	float		scale[3];	// multiply byte verts by this
-	float		translate[3];	// then add this
-	char		name[16];	// frame name from grabbing
-	dtrivertx_t	verts[1];	// variable sized
+typedef struct {
+	float		scale[ 3 ];	// multiply byte verts by this
+	float		translate[ 3 ];	// then add this
+	char		name[ 16 ];	// frame name from grabbing
+	dtrivertx_t	verts[ 1 ];	// variable sized
 } daliasframe_t;
 
 
@@ -134,8 +127,7 @@ typedef struct
 // and an integer vertex index.
 
 
-typedef struct
-{
+typedef struct {
 	int			ident;
 	int			version;
 
@@ -154,7 +146,7 @@ typedef struct
 	int			ofs_st;			// byte offset from start for stverts
 	int			ofs_tris;		// offset for dtriangles
 	int			ofs_frames;		// offset for first frame
-	int			ofs_glcmds;	
+	int			ofs_glcmds;
 	int			ofs_end;		// end of file
 
 } dmdl_t;
@@ -168,39 +160,37 @@ typedef struct
 */
 
 #define IDSPRITEHEADER	(('2'<<24)+('S'<<16)+('D'<<8)+'I')
-		// little-endian "IDS2"
+// little-endian "IDS2"
 #define SPRITE_VERSION	2
 
-typedef struct
-{
+typedef struct {
 	int		width, height;
 	int		origin_x, origin_y;		// raster coordinates inside pic
-	char	name[MAX_SKINNAME];		// name of pcx file
+	char	name[ MAX_SKINNAME ];		// name of pcx file
 } dsprframe_t;
 
 typedef struct {
 	int			ident;
 	int			version;
 	int			numframes;
-	dsprframe_t	frames[1];			// variable sized
+	dsprframe_t	frames[ 1 ];			// variable sized
 } dsprite_t;
 
 /*
 ==============================================================================
 
-  .WAL texture file format
+.WAL texture file format
 
 ==============================================================================
 */
 
 
 #define	MIPLEVELS	4
-typedef struct miptex_s
-{
-	char		name[32];
+typedef struct miptex_s {
+	char		name[ 32 ];
 	unsigned	width, height;
-	unsigned	offsets[MIPLEVELS];		// four mip maps stored
-	char		animname[32];			// next frame in animation chain
+	unsigned	offsets[ MIPLEVELS ];		// four mip maps stored
+	char		animname[ 32 ];			// next frame in animation chain
 	int			flags;
 	int			contents;
 	int			value;
@@ -211,13 +201,13 @@ typedef struct miptex_s
 /*
 ==============================================================================
 
-  .BSP file format
+.BSP file format
 
 ==============================================================================
 */
 
 #define IDBSPHEADER	(('P'<<24)+('S'<<16)+('B'<<8)+'I')
-		// little-endian "IBSP"
+// little-endian "IBSP"
 
 #define BSPVERSION	38
 
@@ -254,8 +244,7 @@ typedef struct miptex_s
 
 //=============================================================================
 
-typedef struct
-{
+typedef struct {
 	int		fileofs, filelen;
 } lump_t;
 
@@ -280,26 +269,23 @@ typedef struct
 #define	LUMP_AREAPORTALS	18
 #define	HEADER_LUMPS		19
 
-typedef struct
-{
+typedef struct {
 	int			ident;
-	int			version;	
-	lump_t		lumps[HEADER_LUMPS];
+	int			version;
+	lump_t		lumps[ HEADER_LUMPS ];
 } dheader_t;
 
-typedef struct
-{
-	float		mins[3], maxs[3];
-	float		origin[3];		// for sounds or lights
+typedef struct {
+	float		mins[ 3 ], maxs[ 3 ];
+	float		origin[ 3 ];		// for sounds or lights
 	int			headnode;
 	int			firstface, numfaces;	// submodels just draw faces
-										// without walking the bsp tree
+	// without walking the bsp tree
 } dmodel_t;
 
 
-typedef struct
-{
-	float	point[3];
+typedef struct {
+	float	point[ 3 ];
 } dvertex_t;
 
 
@@ -315,9 +301,8 @@ typedef struct
 
 // planes (x&~1) and (x&~1)+1 are always opposites
 
-typedef struct
-{
-	float	normal[3];
+typedef struct {
+	float	normal[ 3 ];
 	float	dist;
 	int		type;		// PLANE_X - PLANE_ANYZ ?remove? trivial to regenerate
 } dplane_t;
@@ -378,58 +363,53 @@ typedef struct
 
 
 
-typedef struct
-{
+typedef struct {
 	int			planenum;
-	int			children[2];	// negative numbers are -(leafs+1), not nodes
-	short		mins[3];		// for frustom culling
-	short		maxs[3];
+	int			children[ 2 ];	// negative numbers are -(leafs+1), not nodes
+	short		mins[ 3 ];		// for frustom culling
+	short		maxs[ 3 ];
 	unsigned short	firstface;
 	unsigned short	numfaces;	// counting both sides
 } dnode_t;
 
 
-typedef struct texinfo_s
-{
-	float		vecs[2][4];		// [s/t][xyz offset]
+typedef struct texinfo_s {
+	float		vecs[ 2 ][ 4 ];		// [s/t][xyz offset]
 	int			flags;			// miptex flags + overrides
 	int			value;			// light emission, etc
-	char		texture[32];	// texture name (textures/*.wal)
+	char		texture[ 32 ];	// texture name (textures/*.wal)
 	int			nexttexinfo;	// for animations, -1 = end of chain
 } texinfo_t;
 
 
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
-typedef struct
-{
-	unsigned short	v[2];		// vertex numbers
+typedef struct {
+	unsigned short	v[ 2 ];		// vertex numbers
 } dedge_t;
 
 #define	MAXLIGHTMAPS	4
-typedef struct
-{
+typedef struct {
 	unsigned short	planenum;
 	short		side;
 
 	int			firstedge;		// we must support > 64k edges
-	short		numedges;	
+	short		numedges;
 	short		texinfo;
 
-// lighting info
-	byte		styles[MAXLIGHTMAPS];
+	// lighting info
+	byte		styles[ MAXLIGHTMAPS ];
 	int			lightofs;		// start of [numstyles*surfsize] samples
 } dface_t;
 
-typedef struct
-{
+typedef struct {
 	int				contents;			// OR of all brushes (not needed?)
 
 	short			cluster;
 	short			area;
 
-	short			mins[3];			// for frustum culling
-	short			maxs[3];
+	short			mins[ 3 ];			// for frustum culling
+	short			maxs[ 3 ];
 
 	unsigned short	firstleafface;
 	unsigned short	numleaffaces;
@@ -438,14 +418,12 @@ typedef struct
 	unsigned short	numleafbrushes;
 } dleaf_t;
 
-typedef struct
-{
+typedef struct {
 	unsigned short	planenum;		// facing out of the leaf
 	short	texinfo;
 } dbrushside_t;
 
-typedef struct
-{
+typedef struct {
 	int			firstside;
 	int			numsides;
 	int			contents;
@@ -460,23 +438,20 @@ typedef struct
 // compressed bit vectors
 #define	DVIS_PVS	0
 #define	DVIS_PHS	1
-typedef struct
-{
+typedef struct {
 	int			numclusters;
-	int			bitofs[8][2];	// bitofs[numclusters][2]
+	int			bitofs[ 8 ][ 2 ];	// bitofs[numclusters][2]
 } dvis_t;
 
 // each area has a list of portals that lead into other areas
 // when portals are closed, other areas may not be visible or
 // hearable even if the vis info says that it should be
-typedef struct
-{
+typedef struct {
 	int		portalnum;
 	int		otherarea;
 } dareaportal_t;
 
-typedef struct
-{
+typedef struct {
 	int		numareaportals;
 	int		firstareaportal;
 } darea_t;

@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-	
+
 // q_shared.h -- included first by ALL program modules
 
 #ifdef _WIN32
@@ -52,7 +52,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 typedef unsigned char 		byte;
-typedef enum {false, true}	qboolean;
+typedef enum { false, true }	qboolean;
 
 
 #ifndef NULL
@@ -103,14 +103,13 @@ typedef enum {false, true}	qboolean;
 
 
 // destination class for gi.multicast()
-typedef enum
-{
-MULTICAST_ALL,
-MULTICAST_PHS,
-MULTICAST_PVS,
-MULTICAST_ALL_R,
-MULTICAST_PHS_R,
-MULTICAST_PVS_R
+typedef enum {
+	MULTICAST_ALL,
+	MULTICAST_PHS,
+	MULTICAST_PVS,
+	MULTICAST_ALL_R,
+	MULTICAST_PHS_R,
+	MULTICAST_PVS_R
 } multicast_t;
 
 
@@ -123,8 +122,8 @@ MATHLIB
 */
 
 typedef float vec_t;
-typedef vec_t vec3_t[3];
-typedef vec_t vec5_t[5];
+typedef vec_t vec3_t[ 3 ];
+typedef vec_t vec5_t[ 5 ];
 
 typedef	int	fixed4_t;
 typedef	int	fixed8_t;
@@ -159,32 +158,32 @@ extern long Q_ftol( float f );
 #define VectorNegate(a,b)		(b[0]=-a[0],b[1]=-a[1],b[2]=-a[2])
 #define VectorSet(v, x, y, z)	(v[0]=(x), v[1]=(y), v[2]=(z))
 
-void VectorMA (vec3_t veca, float scale, vec3_t vecb, vec3_t vecc);
+void VectorMA( vec3_t veca, float scale, vec3_t vecb, vec3_t vecc );
 
 // just in case you do't want to use the macros
-vec_t _DotProduct (vec3_t v1, vec3_t v2);
-void _VectorSubtract (vec3_t veca, vec3_t vecb, vec3_t out);
-void _VectorAdd (vec3_t veca, vec3_t vecb, vec3_t out);
-void _VectorCopy (vec3_t in, vec3_t out);
+vec_t _DotProduct( vec3_t v1, vec3_t v2 );
+void _VectorSubtract( vec3_t veca, vec3_t vecb, vec3_t out );
+void _VectorAdd( vec3_t veca, vec3_t vecb, vec3_t out );
+void _VectorCopy( vec3_t in, vec3_t out );
 
-void ClearBounds (vec3_t mins, vec3_t maxs);
-void AddPointToBounds (vec3_t v, vec3_t mins, vec3_t maxs);
-int VectorCompare (vec3_t v1, vec3_t v2);
-vec_t VectorLength (vec3_t v);
-void CrossProduct (vec3_t v1, vec3_t v2, vec3_t cross);
-vec_t VectorNormalize (vec3_t v);		// returns vector length
-vec_t VectorNormalize2 (vec3_t v, vec3_t out);
-void VectorInverse (vec3_t v);
-void VectorScale (vec3_t in, vec_t scale, vec3_t out);
-int Q_log2(int val);
+void ClearBounds( vec3_t mins, vec3_t maxs );
+void AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs );
+int VectorCompare( vec3_t v1, vec3_t v2 );
+vec_t VectorLength( vec3_t v );
+void CrossProduct( vec3_t v1, vec3_t v2, vec3_t cross );
+vec_t VectorNormalize( vec3_t v );		// returns vector length
+vec_t VectorNormalize2( vec3_t v, vec3_t out );
+void VectorInverse( vec3_t v );
+void VectorScale( vec3_t in, vec_t scale, vec3_t out );
+int Q_log2( int val );
 
-void R_ConcatRotations (float in1[3][3], float in2[3][3], float out[3][3]);
-void R_ConcatTransforms (float in1[3][4], float in2[3][4], float out[3][4]);
+void R_ConcatRotations( float in1[ 3 ][ 3 ], float in2[ 3 ][ 3 ], float out[ 3 ][ 3 ] );
+void R_ConcatTransforms( float in1[ 3 ][ 4 ], float in2[ 3 ][ 4 ], float out[ 3 ][ 4 ] );
 
-void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up);
-int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *plane);
-float	anglemod(float a);
-float LerpAngle (float a1, float a2, float frac);
+void AngleVectors( vec3_t angles, vec3_t forward, vec3_t right, vec3_t up );
+int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s *plane );
+float	anglemod( float a );
+float LerpAngle( float a1, float a2, float frac );
 
 #define BOX_ON_PLANE_SIDE(emins, emaxs, p)	\
 	(((p)->type < 3)?						\
@@ -209,37 +208,37 @@ void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, 
 
 //=============================================
 
-char *COM_SkipPath (char *pathname);
-void COM_StripExtension (char *in, char *out);
-void COM_FileBase (char *in, char *out);
-void COM_FilePath (char *in, char *out);
-void COM_DefaultExtension (char *path, char *extension);
+char *COM_SkipPath( char *pathname );
+void COM_StripExtension( char *in, char *out );
+void COM_FileBase( char *in, char *out );
+void COM_FilePath( char *in, char *out );
+void COM_DefaultExtension( char *path, char *extension );
 
-char *COM_Parse (char **data_p);
+char *COM_Parse( char **data_p );
 // data is an in/out parm, returns a parsed out token
 
-void Com_sprintf (char *dest, int size, char *fmt, ...);
+void Com_sprintf( char *dest, int size, char *fmt, ... );
 
-void Com_PageInMemory (byte *buffer, int size);
+void Com_PageInMemory( byte *buffer, int size );
 
 //=============================================
 
 // portable case insensitive compare
-int Q_stricmp (char *s1, char *s2);
-int Q_strcasecmp (char *s1, char *s2);
-int Q_strncasecmp (char *s1, char *s2, int n);
+int Q_stricmp( char *s1, char *s2 );
+int Q_strcasecmp( char *s1, char *s2 );
+int Q_strncasecmp( char *s1, char *s2, int n );
 
 //=============================================
 
-short	BigShort(short l);
-short	LittleShort(short l);
-int		BigLong (int l);
-int		LittleLong (int l);
-float	BigFloat (float l);
-float	LittleFloat (float l);
+short	BigShort( short l );
+short	LittleShort( short l );
+int		BigLong( int l );
+int		LittleLong( int l );
+float	BigFloat( float l );
+float	LittleFloat( float l );
 
-void	Swap_Init (void);
-char	*va(char *format, ...);
+void	Swap_Init( void );
+char	*va( char *format, ... );
 
 //=============================================
 
@@ -250,10 +249,10 @@ char	*va(char *format, ...);
 #define	MAX_INFO_VALUE		64
 #define	MAX_INFO_STRING		512
 
-char *Info_ValueForKey (char *s, char *key);
-void Info_RemoveKey (char *s, char *key);
-void Info_SetValueForKey (char *s, char *key, char *value);
-qboolean Info_Validate (char *s);
+char *Info_ValueForKey( char *s, char *key );
+void Info_RemoveKey( char *s, char *key );
+void Info_SetValueForKey( char *s, char *key, char *value );
+qboolean Info_Validate( char *s );
 
 /*
 ==============================================================
@@ -265,14 +264,14 @@ SYSTEM SPECIFIC
 
 extern	int	curtime;		// time returned by last Sys_Milliseconds
 
-int		Sys_Milliseconds (void);
-void	Sys_Mkdir (char *path);
+int		Sys_Milliseconds( void );
+void	Sys_Mkdir( char *path );
 
 // large block stack allocation routines
-void	*Hunk_Begin (int maxsize);
-void	*Hunk_Alloc (int size);
-void	Hunk_Free (void *buf);
-int		Hunk_End (void);
+void	*Hunk_Begin( int maxsize );
+void	*Hunk_Alloc( int size );
+void	Hunk_Free( void *buf );
+int		Hunk_End( void );
 
 // directory searching
 #define SFF_ARCH    0x01
@@ -284,14 +283,14 @@ int		Hunk_End (void);
 /*
 ** pass in an attribute mask of things you wish to REJECT
 */
-char	*Sys_FindFirst (char *path, unsigned musthave, unsigned canthave );
-char	*Sys_FindNext ( unsigned musthave, unsigned canthave );
-void	Sys_FindClose (void);
+char	*Sys_FindFirst( char *path, unsigned musthave, unsigned canthave );
+char	*Sys_FindNext( unsigned musthave, unsigned canthave );
+void	Sys_FindClose( void );
 
 
 // this is only here so the functions in q_shared.c and q_shwin.c can link
-void Sys_Error (char *error, ...);
-void Com_Printf (char *msg, ...);
+void Sys_Error( char *error, ... );
+void Com_Printf( char *msg, ... );
 
 
 /*
@@ -309,12 +308,11 @@ CVARS (console variables)
 #define	CVAR_USERINFO	2	// added to userinfo  when changed
 #define	CVAR_SERVERINFO	4	// added to serverinfo when changed
 #define	CVAR_NOSET		8	// don't allow change from console at all,
-							// but can be set from the command line
+// but can be set from the command line
 #define	CVAR_LATCH		16	// save changes until server restart
 
 // nothing outside the Cvar_*() functions should modify these fields!
-typedef struct cvar_s
-{
+typedef struct cvar_s {
 	char		*name;
 	char		*string;
 	char		*latched_string;	// for CVAR_LATCH vars
@@ -402,13 +400,12 @@ COLLISION DETECTION
 
 // plane_t structure
 // !!! if this is changed, it must be changed in asm code too !!!
-typedef struct cplane_s
-{
+typedef struct cplane_s {
 	vec3_t	normal;
 	float	dist;
 	byte	type;			// for fast side tests
 	byte	signbits;		// signx + (signy<<1) + (signz<<1)
-	byte	pad[2];
+	byte	pad[ 2 ];
 } cplane_t;
 
 // structure offset for asm code
@@ -421,16 +418,14 @@ typedef struct cplane_s
 #define CPLANE_PAD0				18
 #define CPLANE_PAD1				19
 
-typedef struct cmodel_s
-{
+typedef struct cmodel_s {
 	vec3_t		mins, maxs;
 	vec3_t		origin;		// for sounds or lights
 	int			headnode;
 } cmodel_t;
 
-typedef struct csurface_s
-{
-	char		name[16];
+typedef struct csurface_s {
+	char		name[ 16 ];
 	int			flags;
 	int			value;
 } csurface_t;
@@ -438,12 +433,11 @@ typedef struct csurface_s
 typedef struct mapsurface_s  // used internally due to name len probs //ZOID
 {
 	csurface_t	c;
-	char		rname[32];
+	char		rname[ 32 ];
 } mapsurface_t;
 
 // a trace is returned when a box is swept through the world
-typedef struct
-{
+typedef struct {
 	qboolean	allsolid;	// if true, plane is not valid
 	qboolean	startsolid;	// if true, the initial point was in a solid area
 	float		fraction;	// time completed, 1.0 = didn't hit anything
@@ -458,8 +452,7 @@ typedef struct
 
 // pmove_state_t is the information necessary for client side movement
 // prediction
-typedef enum 
-{
+typedef enum {
 	// can accelerate and turn
 	PM_NORMAL,
 	PM_SPECTATOR,
@@ -483,17 +476,16 @@ typedef enum
 // prediction stays in sync, so no floats are used.
 // if any part of the game code modifies this struct, it
 // will result in a prediction error of some degree.
-typedef struct
-{
+typedef struct {
 	pmtype_t	pm_type;
 
-	short		origin[3];		// 12.3
-	short		velocity[3];	// 12.3
+	short		origin[ 3 ];		// 12.3
+	short		velocity[ 3 ];	// 12.3
 	byte		pm_flags;		// ducked, jump_held, etc
 	byte		pm_time;		// each unit = 8 ms
 	short		gravity;
-	short		delta_angles[3];	// add to command angles to get view direction
-									// changed by spawns, rotating objects, and teleporters
+	short		delta_angles[ 3 ];	// add to command angles to get view direction
+	// changed by spawns, rotating objects, and teleporters
 } pmove_state_t;
 
 
@@ -506,11 +498,10 @@ typedef struct
 
 
 // usercmd_t is sent to the server each client frame
-typedef struct usercmd_s
-{
+typedef struct usercmd_s {
 	byte	msec;
 	byte	buttons;
-	short	angles[3];
+	short	angles[ 3 ];
 	short	forwardmove, sidemove, upmove;
 	byte	impulse;		// remove?
 	byte	lightlevel;		// light level the player is standing on
@@ -518,8 +509,7 @@ typedef struct usercmd_s
 
 
 #define	MAXTOUCH	32
-typedef struct
-{
+typedef struct {
 	// state (in / out)
 	pmove_state_t	s;
 
@@ -529,7 +519,7 @@ typedef struct
 
 	// results (out)
 	int			numtouch;
-	struct edict_s	*touchents[MAXTOUCH];
+	struct edict_s	*touchents[ MAXTOUCH ];
 
 	vec3_t		viewangles;			// clamped
 	float		viewheight;
@@ -541,8 +531,8 @@ typedef struct
 	int			waterlevel;
 
 	// callbacks to test the world
-	trace_t		(*trace) (vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end);
-	int			(*pointcontents) (vec3_t point);
+	trace_t( *trace ) ( vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end );
+	int( *pointcontents ) ( vec3_t point );
 } pmove_t;
 
 
@@ -889,7 +879,7 @@ typedef struct
 
 // ROGUE
 
-extern	vec3_t monster_flash_offset [];
+extern	vec3_t monster_flash_offset[];
 
 
 // temp entity events
@@ -898,8 +888,7 @@ extern	vec3_t monster_flash_offset [];
 // at a location seperate from any existing entity.
 // Temporary entity messages are explicitly constructed
 // and broadcast.
-typedef enum
-{
+typedef enum {
 	TE_GUNSHOT,
 	TE_BLOOD,
 	TE_BLASTER,
@@ -930,7 +919,7 @@ typedef enum
 	TE_BLUEHYPERBLASTER,
 	TE_PLASMA_EXPLOSION,
 	TE_TUNNEL_SPARKS,
-//ROGUE
+	//ROGUE
 	TE_BLASTER2,
 	TE_RAILTRAIL2,
 	TE_FLAME,
@@ -957,7 +946,7 @@ typedef enum
 	TE_EXPLOSION1_BIG,
 	TE_EXPLOSION1_NP,
 	TE_FLECHETTE
-//ROGUE
+	//ROGUE
 } temp_event_t;
 
 #define SPLASH_UNKNOWN		0
@@ -1076,7 +1065,7 @@ ROGUE - VERSIONS
 /*
 ==========================================================
 
-  ELEMENTS COMMUNICATED ACROSS THE NET
+ELEMENTS COMMUNICATED ACROSS THE NET
 
 ==========================================================
 */
@@ -1118,8 +1107,7 @@ ROGUE - VERSIONS
 // ertity events are for effects that take place reletive
 // to an existing entities origin.  Very network efficient.
 // All muzzle flashes really should be converted to events...
-typedef enum
-{
+typedef enum {
 	EV_NONE,
 	EV_ITEM_RESPAWN,
 	EV_FOOTSTEP,
@@ -1134,26 +1122,27 @@ typedef enum
 // entity_state_t is the information conveyed from the server
 // in an update message about entities that the client will
 // need to render in some way
-typedef struct entity_state_s
-{
+typedef struct entity_state_s {
 	int		number;			// edict index
 
 	vec3_t	origin;
 	vec3_t	angles;
 	vec3_t	old_origin;		// for lerping
 	int		modelindex;
-	int		modelindex2, modelindex3, modelindex4;	// weapons, CTF flags, etc
+	int		modelindex2; 
+	int		modelindex3; 
+	int		modelindex4;	// weapons, CTF flags, etc
 	int		frame;
 	int		skinnum;
 	unsigned int		effects;		// PGM - we're filling it, so it needs to be unsigned
 	int		renderfx;
 	int		solid;			// for client side prediction, 8*(bits 0-4) is x/y radius
-							// 8*(bits 5-9) is z down distance, 8(bits10-15) is z up
-							// gi.linkentity sets this properly
+	// 8*(bits 5-9) is z down distance, 8(bits10-15) is z up
+	// gi.linkentity sets this properly
 	int		sound;			// for looping sounds, to guarantee shutoff
 	int		event;			// impulse events -- muzzle flashes, footsteps, etc
-							// events only go out for a single frame, they
-							// are automatically cleared each frame
+	// events only go out for a single frame, they
+	// are automatically cleared each frame
 } entity_state_t;
 
 //==============================================
@@ -1163,8 +1152,7 @@ typedef struct entity_state_s
 // to rendered a view.  There will only be 10 player_state_t sent each second,
 // but the number of pmove_state_t changes will be reletive to client
 // frame rates
-typedef struct
-{
+typedef struct {
 	pmove_state_t	pmove;		// for prediction
 
 	// these fields do not need to be communicated bit-precise
@@ -1172,20 +1160,20 @@ typedef struct
 	vec3_t		viewangles;		// for fixed views
 	vec3_t		viewoffset;		// add to pmovestate->origin
 	vec3_t		kick_angles;	// add to view direction to get render angles
-								// set by weapon kicks, pain effects, etc
+	// set by weapon kicks, pain effects, etc
 
 	vec3_t		gunangles;
 	vec3_t		gunoffset;
 	int			gunindex;
 	int			gunframe;
 
-	float		blend[4];		// rgba full screen effect
-	
+	float		blend[ 4 ];		// rgba full screen effect
+
 	float		fov;			// horizontal field of view
 
 	int			rdflags;		// refdef flags
 
-	short		stats[MAX_STATS];		// fast status bar updates
+	short		stats[ MAX_STATS ];		// fast status bar updates
 } player_state_t;
 
 
