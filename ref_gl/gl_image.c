@@ -24,16 +24,14 @@ image_t		gltextures[ MAX_GLTEXTURES ];
 int			numgltextures;
 int			base_textureid;		// gltextures[i] = base_textureid+i
 
-static byte			 intensitytable[ 256 ];
-static unsigned char gammatable[ 256 ];
+static byte intensitytable[ 256 ];
+static byte gammatable[ 256 ];
 
 cvar_t		*intensity;
-
 unsigned	d_8to24table[ 256 ];
 
-qboolean GL_Upload8( byte *data, int width, int height, qboolean mipmap, qboolean is_sky );
-qboolean GL_Upload32( unsigned *data, int width, int height, qboolean mipmap );
-
+qboolean	GL_Upload8( byte *data, int width, int height, qboolean mipmap, qboolean is_sky );
+qboolean	GL_Upload32( unsigned *data, int width, int height, qboolean mipmap );
 
 int		gl_solid_format = 3;
 int		gl_alpha_format = 4;
@@ -45,17 +43,18 @@ int		gl_filter_min = GL_LINEAR_MIPMAP_NEAREST;
 int		gl_filter_max = GL_LINEAR;
 
 void GL_SetTexturePalette( unsigned palette[ 256 ] ) {
-	int i;
-	unsigned char temptable[ 768 ];
+	int		i;
+	byte	temptable[ 768 ];
 
 	for ( i = 0; i < 256; i++ ) {
-		temptable[ i * 3 + 0 ] = ( palette[ i ] >> 0 ) & 0xff;
-		temptable[ i * 3 + 1 ] = ( palette[ i ] >> 8 ) & 0xff;
+		temptable[ i * 3 + 0 ] = ( palette[ i ] >> 0  ) & 0xff;
+		temptable[ i * 3 + 1 ] = ( palette[ i ] >> 8  ) & 0xff;
 		temptable[ i * 3 + 2 ] = ( palette[ i ] >> 16 ) & 0xff;
 	}
 
 	if ( qglColorTableEXT && gl_ext_palettedtexture->value ) {
-		qglColorTableEXT( GL_SHARED_TEXTURE_PALETTE_EXT,
+		qglColorTableEXT(
+			GL_SHARED_TEXTURE_PALETTE_EXT,
 			GL_RGB,
 			256,
 			GL_RGB,
@@ -65,8 +64,9 @@ void GL_SetTexturePalette( unsigned palette[ 256 ] ) {
 }
 
 void GL_EnableMultitexture( qboolean enable ) {
-	if ( !qglSelectTextureSGIS )
+	if ( !qglSelectTextureSGIS ) {
 		return;
+	}
 
 	if ( enable ) {
 		GL_SelectTexture( GL_TEXTURE1_SGIS );
@@ -77,6 +77,7 @@ void GL_EnableMultitexture( qboolean enable ) {
 		qglDisable( GL_TEXTURE_2D );
 		GL_TexEnv( GL_REPLACE );
 	}
+
 	GL_SelectTexture( GL_TEXTURE0_SGIS );
 	GL_TexEnv( GL_REPLACE );
 }
@@ -87,20 +88,23 @@ void GL_SelectTexture( GLenum texture ) {
 	if ( !qglSelectTextureSGIS )
 		return;
 
-	if ( texture == GL_TEXTURE0_SGIS )
+	if ( texture == GL_TEXTURE0_SGIS ) {
 		tmu = 0;
-	else
+	} else {
 		tmu = 1;
+	}
 
-	if ( tmu == gl_state.currenttmu )
+	if ( tmu == gl_state.currenttmu ) {
 		return;
+	}
 
 	gl_state.currenttmu = tmu;
 
-	if ( tmu == 0 )
+	if ( tmu == 0 ) {
 		qglSelectTextureSGIS( GL_TEXTURE0_SGIS );
-	else
+	} else {
 		qglSelectTextureSGIS( GL_TEXTURE1_SGIS );
+	}
 }
 
 void GL_TexEnv( GLenum mode ) {
@@ -113,12 +117,15 @@ void GL_TexEnv( GLenum mode ) {
 }
 
 void GL_Bind( int texnum ) {
-	extern	image_t	*draw_chars;
+	extern image_t	*draw_chars;
 
-	if ( gl_nobind->value && draw_chars )		// performance evaluation option
+	if ( gl_nobind->value && draw_chars ) {	// performance evaluation option
 		texnum = draw_chars->texnum;
-	if ( gl_state.currenttextures[ gl_state.currenttmu ] == texnum )
+	}
+	if ( gl_state.currenttextures[ gl_state.currenttmu ] == texnum ) {
 		return;
+	}
+
 	gl_state.currenttextures[ gl_state.currenttmu ] = texnum;
 	qglBindTexture( GL_TEXTURE_2D, texnum );
 }
@@ -126,18 +133,21 @@ void GL_Bind( int texnum ) {
 void GL_MBind( GLenum target, int texnum ) {
 	GL_SelectTexture( target );
 	if ( target == GL_TEXTURE0_SGIS ) {
-		if ( gl_state.currenttextures[ 0 ] == texnum )
+		if ( gl_state.currenttextures[ 0 ] == texnum ) {
 			return;
+		}
 	} else {
-		if ( gl_state.currenttextures[ 1 ] == texnum )
+		if ( gl_state.currenttextures[ 1 ] == texnum ) {
 			return;
+		}
 	}
 	GL_Bind( texnum );
 }
 
 typedef struct {
-	char *name;
-	int	minimize, maximize;
+	char	*name;
+	int		minimize;
+	int		maximize;
 } glmode_t;
 
 glmode_t modes[] = {
@@ -152,8 +162,8 @@ glmode_t modes[] = {
 #define NUM_GL_MODES (sizeof(modes) / sizeof (glmode_t))
 
 typedef struct {
-	char *name;
-	int mode;
+	char	*name;
+	int		mode;
 } gltmode_t;
 
 gltmode_t gl_alpha_modes[] = {
@@ -191,8 +201,9 @@ void GL_TextureMode( char *string ) {
 	image_t	*glt;
 
 	for ( i = 0 ; i< NUM_GL_MODES ; i++ ) {
-		if ( !Q_stricmp( modes[ i ].name, string ) )
+		if ( !Q_stricmp( modes[ i ].name, string ) ) {
 			break;
+		}
 	}
 
 	if ( i == NUM_GL_MODES ) {
@@ -222,8 +233,9 @@ void GL_TextureAlphaMode( char *string ) {
 	int		i;
 
 	for ( i = 0 ; i< NUM_GL_ALPHA_MODES ; i++ ) {
-		if ( !Q_stricmp( gl_alpha_modes[ i ].name, string ) )
+		if ( !Q_stricmp( gl_alpha_modes[ i ].name, string ) ) {
 			break;
+		}
 	}
 
 	if ( i == NUM_GL_ALPHA_MODES ) {
@@ -243,8 +255,9 @@ void GL_TextureSolidMode( char *string ) {
 	int		i;
 
 	for ( i = 0 ; i< NUM_GL_SOLID_MODES ; i++ ) {
-		if ( !Q_stricmp( gl_solid_modes[ i ].name, string ) )
+		if ( !Q_stricmp( gl_solid_modes[ i ].name, string ) ) {
 			break;
+		}
 	}
 
 	if ( i == NUM_GL_SOLID_MODES ) {
@@ -260,12 +273,11 @@ void GL_TextureSolidMode( char *string ) {
 GL_ImageList_f
 ===============
 */
-void	GL_ImageList_f( void ) {
+void GL_ImageList_f( void ) {
 	int		i;
 	image_t	*image;
 	int		texels;
-	const char *palstrings[ 2 ] =
-	{
+	const char *palstrings[ 2 ] = {
 		"RGB",
 		"PAL"
 	};
@@ -274,8 +286,10 @@ void	GL_ImageList_f( void ) {
 	texels = 0;
 
 	for ( i = 0, image = gltextures ; i<numgltextures ; i++, image++ ) {
-		if ( image->texnum <= 0 )
+		if ( image->texnum <= 0 ) {
 			continue;
+		}
+
 		texels += image->upload_width*image->upload_height;
 		switch ( image->type ) {
 		case it_skin:

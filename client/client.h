@@ -47,30 +47,30 @@ typedef struct {
 	byte			areabits[ MAX_MAP_AREAS / 8 ];		// portalarea visibility bits
 	player_state_t	playerstate;
 	int				num_entities;
-	int				parse_entities;	// non-masked index into cl_parse_entities array
+	int				parse_entities;		// non-masked index into cl_parse_entities array
 } frame_t;
 
 typedef struct {
-	entity_state_t	baseline;		// delta from this if not from a previous frame
+	entity_state_t	baseline;			// delta from this if not from a previous frame
 	entity_state_t	current;
-	entity_state_t	prev;			// will always be valid, but might just be a copy of current
+	entity_state_t	prev;				// will always be valid, but might just be a copy of current
 
-	int			serverframe;		// if not current, this ent isn't in the frame
+	int				serverframe;		// if not current, this ent isn't in the frame
 
-	int			trailcount;			// for diminishing grenade trails
-	vec3_t		lerp_origin;		// for trails (variable hz)
+	int				trailcount;			// for diminishing grenade trails
+	vec3_t			lerp_origin;		// for trails (variable hz)
 
-	int			fly_stoptime;
+	int				fly_stoptime;
 } centity_t;
 
 #define MAX_CLIENTWEAPONMODELS		20		// PGM -- upped from 16 to fit the chainfist vwep
 
 typedef struct {
-	char	name[ MAX_QPATH ];
-	char	cinfo[ MAX_QPATH ];
+	char			name[ MAX_QPATH ];
+	char			cinfo[ MAX_QPATH ];
 	struct image_s	*skin;
 	struct image_s	*icon;
-	char	iconname[ MAX_QPATH ];
+	char			iconname[ MAX_QPATH ];
 	struct model_s	*model;
 	struct model_s	*weaponmodel[ MAX_CLIENTWEAPONMODELS ];
 } clientinfo_t;

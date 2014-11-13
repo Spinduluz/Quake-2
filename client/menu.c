@@ -3187,12 +3187,12 @@ static qboolean IconOfSkinExists( char *skin, char **pcxfiles, int npcxfiles ) {
 }
 
 static qboolean PlayerConfig_ScanDirectories( void ) {
-	char findname[ 1024 ];
-	char scratch[ 1024 ];
-	int ndirs = 0, npms = 0;
-	char **dirnames;
-	char *path = NULL;
-	int i;
+	char	findname[ 1024 ];
+	char	scratch[ 1024 ];
+	int		ndirs = 0, npms = 0;
+	char	**dirnames;
+	char	*path = NULL;
+	int		i;
 
 	extern char **FS_ListFiles( char *, int *, unsigned, unsigned );
 
@@ -3313,6 +3313,8 @@ static qboolean PlayerConfig_ScanDirectories( void ) {
 	}
 	if ( dirnames )
 		FreeFileList( dirnames, ndirs );
+
+	return false;
 }
 
 static int pmicmpfnc( const void *_a, const void *_b ) {

@@ -23,27 +23,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "gl_local.h"
 
 static vec3_t	modelorg;		// relative to viewpoint
+msurface_t		*r_alpha_surfaces;
 
-msurface_t	*r_alpha_surfaces;
+#define DYNAMIC_LIGHT_WIDTH		128
+#define DYNAMIC_LIGHT_HEIGHT	128
 
-#define DYNAMIC_LIGHT_WIDTH  128
-#define DYNAMIC_LIGHT_HEIGHT 128
+#define LIGHTMAP_BYTES			4
 
-#define LIGHTMAP_BYTES 4
+#define	BLOCK_WIDTH				128
+#define	BLOCK_HEIGHT			128
 
-#define	BLOCK_WIDTH		128
-#define	BLOCK_HEIGHT	128
-
-#define	MAX_LIGHTMAPS	128
+#define	MAX_LIGHTMAPS			128
 
 int		c_visible_lightmaps;
 int		c_visible_textures;
 
-#define GL_LIGHTMAP_FORMAT GL_RGBA
+#define GL_LIGHTMAP_FORMAT		GL_RGBA
 
 typedef struct {
-	int internal_format;
-	int	current_lightmap_texture;
+	int			internal_format;
+	int			current_lightmap_texture;
 
 	msurface_t	*lightmap_surfaces[ MAX_LIGHTMAPS ];
 
@@ -82,8 +81,9 @@ Returns the proper texture for a given time and base texture
 image_t *R_TextureAnimation( mtexinfo_t *tex ) {
 	int		c;
 
-	if ( !tex->next )
+	if ( !tex->next ) {
 		return tex->image;
+	}
 
 	c = currententity->frame % tex->numframes;
 	while ( c ) {
@@ -336,13 +336,15 @@ void R_BlendLightmaps( void ) {
 	*/
 	for ( i = 1; i < MAX_LIGHTMAPS; i++ ) {
 		if ( gl_lms.lightmap_surfaces[ i ] ) {
-			if ( currentmodel == r_worldmodel )
+			if ( currentmodel == r_worldmodel ) {
 				c_visible_lightmaps++;
+			}
 			GL_Bind( gl_state.lightmap_textures + i );
 
 			for ( surf = gl_lms.lightmap_surfaces[ i ]; surf != 0; surf = surf->lightmapchain ) {
-				if ( surf->polys )
+				if ( surf->polys ) {
 					DrawGLPolyChain( surf->polys, 0, 0 );
+				}
 			}
 		}
 	}
@@ -354,9 +356,9 @@ void R_BlendLightmaps( void ) {
 		LM_InitBlock();
 
 		GL_Bind( gl_state.lightmap_textures + 0 );
-
-		if ( currentmodel == r_worldmodel )
+		if ( currentmodel == r_worldmodel ) {
 			c_visible_lightmaps++;
+		}
 
 		newdrawsurf = gl_lms.lightmap_surfaces[ 0 ];
 
@@ -681,11 +683,16 @@ static void GL_RenderLightmappedPoly( msurface_t *surf ) {
 
 			lmtex = 0;
 
-			qglTexSubImage2D( GL_TEXTURE_2D, 0,
-				surf->light_s, surf->light_t,
-				smax, tmax,
+			qglTexSubImage2D(
+				GL_TEXTURE_2D, 
+				0,
+				surf->light_s, 
+				surf->light_t,
+				smax, 
+				tmax,
 				GL_LIGHTMAP_FORMAT,
-				GL_UNSIGNED_BYTE, temp );
+				GL_UNSIGNED_BYTE,
+				temp );
 
 		}
 
@@ -827,8 +834,9 @@ void R_DrawInlineBModel( void ) {
 	}
 
 	if ( !( currententity->flags & RF_TRANSLUCENT ) ) {
-		if ( !qglMTexCoord2fSGIS )
+		if ( !qglMTexCoord2fSGIS ) {
 			R_BlendLightmaps();
+		}
 	} else {
 		qglDisable( GL_BLEND );
 		qglColor4f( 1, 1, 1, 1 );
@@ -842,7 +850,8 @@ R_DrawBrushModel
 =================
 */
 void R_DrawBrushModel( entity_t *e ) {
-	vec3_t		mins, maxs;
+	vec3_t		mins;
+	vec3_t		maxs;
 	int			i;
 	qboolean	rotated;
 
@@ -909,6 +918,7 @@ WORLD MODEL
 =============================================================
 */
 
+
 /*
 ================
 R_RecursiveWorldNode
@@ -962,12 +972,15 @@ void R_RecursiveWorldNode( mnode_t *node ) {
 	case PLANE_X:
 		dot = modelorg[ 0 ] - plane->dist;
 		break;
+
 	case PLANE_Y:
 		dot = modelorg[ 1 ] - plane->dist;
 		break;
+
 	case PLANE_Z:
 		dot = modelorg[ 2 ] - plane->dist;
 		break;
+
 	default:
 		dot = DotProduct( modelorg, plane->normal ) - plane->dist;
 		break;
@@ -1051,7 +1064,6 @@ void R_RecursiveWorldNode( mnode_t *node ) {
 	*/
 }
 
-
 /*
 =============
 R_DrawWorld
@@ -1060,11 +1072,13 @@ R_DrawWorld
 void R_DrawWorld( void ) {
 	entity_t	ent;
 
-	if ( !r_drawworld->value )
+	if ( !r_drawworld->value ) {
 		return;
+	}
 
-	if ( r_newrefdef.rdflags & RDF_NOWORLDMODEL )
+	if ( r_newrefdef.rdflags & RDF_NOWORLDMODEL ) {
 		return;
+	}
 
 	currentmodel = r_worldmodel;
 
@@ -1223,28 +1237,37 @@ static void LM_UploadBlock( qboolean dynamic ) {
 		int i;
 
 		for ( i = 0; i < BLOCK_WIDTH; i++ ) {
-			if ( gl_lms.allocated[ i ] > height )
+			if ( gl_lms.allocated[ i ] > height ) {
 				height = gl_lms.allocated[ i ];
+			}
 		}
 
-		qglTexSubImage2D( GL_TEXTURE_2D,
+		qglTexSubImage2D( 
+			GL_TEXTURE_2D,
 			0,
-			0, 0,
-			BLOCK_WIDTH, height,
+			0, 
+			0,
+			BLOCK_WIDTH, 
+			height,
 			GL_LIGHTMAP_FORMAT,
 			GL_UNSIGNED_BYTE,
 			gl_lms.lightmap_buffer );
+
 	} else {
-		qglTexImage2D( GL_TEXTURE_2D,
+		qglTexImage2D( 
+			GL_TEXTURE_2D,
 			0,
 			gl_lms.internal_format,
-			BLOCK_WIDTH, BLOCK_HEIGHT,
+			BLOCK_WIDTH, 
+			BLOCK_HEIGHT,
 			0,
 			GL_LIGHTMAP_FORMAT,
 			GL_UNSIGNED_BYTE,
 			gl_lms.lightmap_buffer );
-		if ( ++gl_lms.current_lightmap_texture == MAX_LIGHTMAPS )
+
+		if ( ++gl_lms.current_lightmap_texture == MAX_LIGHTMAPS ) {
 			ri.Sys_Error( ERR_DROP, "LM_UploadBlock() - MAX_LIGHTMAPS exceeded\n" );
+		}
 	}
 }
 
@@ -1259,10 +1282,13 @@ static qboolean LM_AllocBlock( int w, int h, int *x, int *y ) {
 		best2 = 0;
 
 		for ( j = 0 ; j<w ; j++ ) {
-			if ( gl_lms.allocated[ i + j ] >= best )
+			if ( gl_lms.allocated[ i + j ] >= best ) {
 				break;
-			if ( gl_lms.allocated[ i + j ] > best2 )
+			}
+
+			if ( gl_lms.allocated[ i + j ] > best2 ) {
 				best2 = gl_lms.allocated[ i + j ];
+			}
 		}
 		if ( j == w ) {	// this is a valid spot
 			*x = i;
@@ -1270,11 +1296,13 @@ static qboolean LM_AllocBlock( int w, int h, int *x, int *y ) {
 		}
 	}
 
-	if ( best + h > BLOCK_HEIGHT )
+	if ( best + h > BLOCK_HEIGHT ) {
 		return false;
+	}
 
-	for ( i = 0 ; i<w ; i++ )
+	for ( i = 0 ; i<w ; i++ ) {
 		gl_lms.allocated[ *x + i ] = best + h;
+	}
 
 	return true;
 }
@@ -1285,8 +1313,11 @@ GL_BuildPolygonFromSurface
 ================
 */
 void GL_BuildPolygonFromSurface( msurface_t *fa ) {
-	int			i, lindex, lnumverts;
-	medge_t		*pedges, *r_pedge;
+	int			i;
+	int			lindex;
+	int			lnumverts;
+	medge_t		*pedges;
+	medge_t		*r_pedge;
 	int			vertpage;
 	float		*vec;
 	float		s, t;
@@ -1318,6 +1349,7 @@ void GL_BuildPolygonFromSurface( msurface_t *fa ) {
 			r_pedge = &pedges[ -lindex ];
 			vec = currentmodel->vertexes[ r_pedge->v[ 1 ] ].position;
 		}
+
 		s = DotProduct( vec, fa->texinfo->vecs[ 0 ] ) + fa->texinfo->vecs[ 0 ][ 3 ];
 		s /= fa->texinfo->image->width;
 
@@ -1370,6 +1402,7 @@ void GL_CreateSurfaceLightmap( msurface_t *surf ) {
 	if ( !LM_AllocBlock( smax, tmax, &surf->light_s, &surf->light_t ) ) {
 		LM_UploadBlock( false );
 		LM_InitBlock();
+
 		if ( !LM_AllocBlock( smax, tmax, &surf->light_s, &surf->light_t ) ) {
 			ri.Sys_Error( ERR_FATAL, "Consecutive calls to LM_AllocBlock(%d,%d) failed\n", smax, tmax );
 		}
@@ -1407,7 +1440,7 @@ void GL_BeginBuildingLightmaps( model_t *m ) {
 	** setup the base lightstyles so the lightmaps won't have to be regenerated
 	** the first time they're seen
 	*/
-	for ( i = 0 ; i<MAX_LIGHTSTYLES ; i++ ) {
+	for ( i = 0; i < MAX_LIGHTSTYLES; i++ ) {
 		lightstyles[ i ].rgb[ 0 ] = 1;
 		lightstyles[ i ].rgb[ 1 ] = 1;
 		lightstyles[ i ].rgb[ 2 ] = 1;
@@ -1458,10 +1491,13 @@ void GL_BeginBuildingLightmaps( model_t *m ) {
 	GL_Bind( gl_state.lightmap_textures + 0 );
 	qglTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	qglTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-	qglTexImage2D( GL_TEXTURE_2D,
+
+	qglTexImage2D( 
+		GL_TEXTURE_2D,
 		0,
 		gl_lms.internal_format,
-		BLOCK_WIDTH, BLOCK_HEIGHT,
+		BLOCK_WIDTH, 
+		BLOCK_HEIGHT,
 		0,
 		GL_LIGHTMAP_FORMAT,
 		GL_UNSIGNED_BYTE,

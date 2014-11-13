@@ -293,10 +293,11 @@ void IN_MouseMove( usercmd_t *cmd ) {
 	mouse_y *= sensitivity->value;
 
 	// add mouse X/Y movement to cmd
-	if ( ( in_strafe.state & 1 ) || ( lookstrafe->value && mlooking ) )
+	if ( ( in_strafe.state & 1 ) || ( lookstrafe->value && mlooking ) ) {
 		cmd->sidemove += m_side->value * mouse_x;
-	else
+	} else {
 		cl.viewangles[ YAW ] -= m_yaw->value * mouse_x;
+	}
 
 	if ( ( mlooking || freelook->value ) && !( in_strafe.state & 1 ) ) {
 		cl.viewangles[ PITCH ] += m_pitch->value * mouse_y;
@@ -399,17 +400,16 @@ Called every frame, even if not generating commands
 ==================
 */
 void IN_Frame( void ) {
-	if ( !mouseinitialized )
+	if ( !mouseinitialized ) {
 		return;
+	}
 
 	if ( !in_mouse || !in_appactive ) {
 		IN_DeactivateMouse();
 		return;
 	}
 
-	if ( !cl.refresh_prepped
-		|| cls.key_dest == key_console
-		|| cls.key_dest == key_menu ) {
+	if ( !cl.refresh_prepped || cls.key_dest == key_console || cls.key_dest == key_menu ) {
 		// temporarily deactivate if in fullscreen
 		if ( Cvar_VariableValue( "vid_fullscreen" ) == 0 ) {
 			IN_DeactivateMouse();
@@ -428,8 +428,9 @@ IN_Move
 void IN_Move( usercmd_t *cmd ) {
 	IN_MouseMove( cmd );
 
-	if ( ActiveApp )
+	if ( ActiveApp ) {
 		IN_JoyMove( cmd );
+	}
 }
 
 
@@ -469,8 +470,9 @@ void IN_StartupJoystick( void ) {
 
 	// abort startup if user requests no joystick
 	cv = Cvar_Get( "in_initjoy", "1", CVAR_NOSET );
-	if ( !cv->value )
+	if ( !cv->value ) {
 		return;
+	}
 
 	// verify joystick driver is present
 	if ( ( numdevs = joyGetNumDevs() ) == 0 ) {
@@ -484,8 +486,9 @@ void IN_StartupJoystick( void ) {
 		ji.dwSize = sizeof( ji );
 		ji.dwFlags = JOY_RETURNCENTERED;
 
-		if ( ( mmr = joyGetPosEx( joy_id, &ji ) ) == JOYERR_NOERROR )
+		if ( ( mmr = joyGetPosEx( joy_id, &ji ) ) == JOYERR_NOERROR ) {
 			break;
+		}
 	}
 
 	// abort startup if we didn't find a valid joystick
@@ -539,6 +542,8 @@ PDWORD RawValuePointer( int axis ) {
 	case JOY_AXIS_V:
 		return &ji.dwVpos;
 	}
+
+	return NULL;
 }
 
 

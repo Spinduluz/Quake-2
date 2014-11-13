@@ -125,9 +125,11 @@ typedef float vec_t;
 typedef vec_t vec3_t[ 3 ];
 typedef vec_t vec5_t[ 5 ];
 
+#if 0
 typedef	int	fixed4_t;
 typedef	int	fixed8_t;
 typedef	int	fixed16_t;
+#endif
 
 #ifndef M_PI
 #define M_PI		3.14159265358979323846	// matches value in gcc v2 math.h
@@ -158,48 +160,35 @@ extern long Q_ftol( float f );
 #define VectorNegate(a,b)		(b[0]=-a[0],b[1]=-a[1],b[2]=-a[2])
 #define VectorSet(v, x, y, z)	(v[0]=(x), v[1]=(y), v[2]=(z))
 
-void VectorMA( vec3_t veca, float scale, vec3_t vecb, vec3_t vecc );
+void	VectorMA( vec3_t veca, float scale, vec3_t vecb, vec3_t vecc );
 
-// just in case you do't want to use the macros
-vec_t _DotProduct( vec3_t v1, vec3_t v2 );
-void _VectorSubtract( vec3_t veca, vec3_t vecb, vec3_t out );
-void _VectorAdd( vec3_t veca, vec3_t vecb, vec3_t out );
-void _VectorCopy( vec3_t in, vec3_t out );
+// just in case you don't want to use the macros
+vec_t	_DotProduct( vec3_t v1, vec3_t v2 );
+void	_VectorSubtract( vec3_t veca, vec3_t vecb, vec3_t out );
+void	_VectorAdd( vec3_t veca, vec3_t vecb, vec3_t out );
+void	_VectorCopy( vec3_t in, vec3_t out );
 
-void ClearBounds( vec3_t mins, vec3_t maxs );
-void AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs );
-int VectorCompare( vec3_t v1, vec3_t v2 );
-vec_t VectorLength( vec3_t v );
-void CrossProduct( vec3_t v1, vec3_t v2, vec3_t cross );
-vec_t VectorNormalize( vec3_t v );		// returns vector length
-vec_t VectorNormalize2( vec3_t v, vec3_t out );
-void VectorInverse( vec3_t v );
-void VectorScale( vec3_t in, vec_t scale, vec3_t out );
-int Q_log2( int val );
+void	ClearBounds( vec3_t mins, vec3_t maxs );
+void	AddPointToBounds( vec3_t v, vec3_t mins, vec3_t maxs );
+int		VectorCompare( vec3_t v1, vec3_t v2 );
+vec_t	VectorLength( vec3_t v );
+void	CrossProduct( vec3_t v1, vec3_t v2, vec3_t cross );
+vec_t	VectorNormalize( vec3_t v );		// returns vector length
+vec_t	VectorNormalize2( vec3_t v, vec3_t out );
+void	VectorInverse( vec3_t v );
+void	VectorScale( vec3_t in, vec_t scale, vec3_t out );
+int		Q_log2( int val );
 
-void R_ConcatRotations( float in1[ 3 ][ 3 ], float in2[ 3 ][ 3 ], float out[ 3 ][ 3 ] );
-void R_ConcatTransforms( float in1[ 3 ][ 4 ], float in2[ 3 ][ 4 ], float out[ 3 ][ 4 ] );
+void	R_ConcatRotations( float in1[ 3 ][ 3 ], float in2[ 3 ][ 3 ], float out[ 3 ][ 3 ] );
+void	R_ConcatTransforms( float in1[ 3 ][ 4 ], float in2[ 3 ][ 4 ], float out[ 3 ][ 4 ] );
 
-void AngleVectors( vec3_t angles, vec3_t forward, vec3_t right, vec3_t up );
-int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s *plane );
+void	AngleVectors( vec3_t angles, vec3_t forward, vec3_t right, vec3_t up );
+int		BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s *plane );
 float	anglemod( float a );
-float LerpAngle( float a1, float a2, float frac );
+float	LerpAngle( float a1, float a2, float frac );
 
-#define BOX_ON_PLANE_SIDE(emins, emaxs, p)	\
-	(((p)->type < 3)?						\
-	(										\
-		((p)->dist <= (emins)[(p)->type])?	\
-			1								\
-		:									\
-		(									\
-			((p)->dist >= (emaxs)[(p)->type])?\
-				2							\
-			:								\
-				3							\
-		)									\
-	)										\
-	:										\
-		BoxOnPlaneSide( (emins), (emaxs), (p)))
+#define BOX_ON_PLANE_SIDE( emins, emaxs, p )	\
+(((p)->type < 3) ? (((p)->dist <= (emins)[(p)->type]) ? 1 : (((p)->dist >= (emaxs)[(p)->type]) ? 2 : 3)) : BoxOnPlaneSide((emins),(emaxs),(p)))
 
 void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal );
 void PerpendicularVector( vec3_t dst, const vec3_t src );
@@ -289,8 +278,8 @@ void	Sys_FindClose( void );
 
 
 // this is only here so the functions in q_shared.c and q_shwin.c can link
-void Sys_Error( char *error, ... );
-void Com_Printf( char *msg, ... );
+void	Sys_Error( char *error, ... );
+void	Com_Printf( char *msg, ... );
 
 
 /*
@@ -313,13 +302,13 @@ CVARS (console variables)
 
 // nothing outside the Cvar_*() functions should modify these fields!
 typedef struct cvar_s {
-	char		*name;
-	char		*string;
-	char		*latched_string;	// for CVAR_LATCH vars
-	int			flags;
-	qboolean	modified;	// set each time the cvar is changed
-	float		value;
-	struct cvar_s *next;
+	char			*name;
+	char			*string;
+	char			*latched_string;	// for CVAR_LATCH vars
+	int				flags;
+	qboolean		modified;	// set each time the cvar is changed
+	float			value;
+	struct cvar_s	*next;
 } cvar_t;
 
 #endif		// CVAR
@@ -381,15 +370,15 @@ COLLISION DETECTION
 
 
 // content masks
-#define	MASK_ALL				(-1)
-#define	MASK_SOLID				(CONTENTS_SOLID|CONTENTS_WINDOW)
-#define	MASK_PLAYERSOLID		(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
-#define	MASK_DEADSOLID			(CONTENTS_SOLID|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW)
-#define	MASK_MONSTERSOLID		(CONTENTS_SOLID|CONTENTS_MONSTERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER)
-#define	MASK_WATER				(CONTENTS_WATER|CONTENTS_LAVA|CONTENTS_SLIME)
-#define	MASK_OPAQUE				(CONTENTS_SOLID|CONTENTS_SLIME|CONTENTS_LAVA)
-#define	MASK_SHOT				(CONTENTS_SOLID|CONTENTS_MONSTER|CONTENTS_WINDOW|CONTENTS_DEADMONSTER)
-#define MASK_CURRENT			(CONTENTS_CURRENT_0|CONTENTS_CURRENT_90|CONTENTS_CURRENT_180|CONTENTS_CURRENT_270|CONTENTS_CURRENT_UP|CONTENTS_CURRENT_DOWN)
+#define	MASK_ALL				( -1 )
+#define	MASK_SOLID				( CONTENTS_SOLID | CONTENTS_WINDOW )
+#define	MASK_PLAYERSOLID		( CONTENTS_SOLID | CONTENTS_PLAYERCLIP | CONTENTS_WINDOW | CONTENTS_MONSTER )
+#define	MASK_DEADSOLID			( CONTENTS_SOLID | CONTENTS_PLAYERCLIP | CONTENTS_WINDOW )
+#define	MASK_MONSTERSOLID		( CONTENTS_SOLID | CONTENTS_MONSTERCLIP | CONTENTS_WINDOW | CONTENTS_MONSTER )
+#define	MASK_WATER				( CONTENTS_WATER | CONTENTS_LAVA | CONTENTS_SLIME )
+#define	MASK_OPAQUE				( CONTENTS_SOLID | CONTENTS_SLIME | CONTENTS_LAVA )
+#define	MASK_SHOT				( CONTENTS_SOLID | CONTENTS_MONSTER | CONTENTS_WINDOW | CONTENTS_DEADMONSTER )
+#define MASK_CURRENT			( CONTENTS_CURRENT_0 | CONTENTS_CURRENT_90 | CONTENTS_CURRENT_180 | CONTENTS_CURRENT_270 | CONTENTS_CURRENT_UP | CONTENTS_CURRENT_DOWN )
 
 
 // gi.BoxEdicts() can return a list of either solid or trigger entities
@@ -419,32 +408,32 @@ typedef struct cplane_s {
 #define CPLANE_PAD1				19
 
 typedef struct cmodel_s {
-	vec3_t		mins, maxs;
-	vec3_t		origin;		// for sounds or lights
-	int			headnode;
+	vec3_t			mins, maxs;
+	vec3_t			origin;		// for sounds or lights
+	int				headnode;
 } cmodel_t;
 
 typedef struct csurface_s {
-	char		name[ 16 ];
-	int			flags;
-	int			value;
+	char			name[ 16 ];
+	int				flags;
+	int				value;
 } csurface_t;
 
 typedef struct mapsurface_s  // used internally due to name len probs //ZOID
 {
-	csurface_t	c;
-	char		rname[ 32 ];
+	csurface_t		c;
+	char			rname[ 32 ];
 } mapsurface_t;
 
 // a trace is returned when a box is swept through the world
 typedef struct {
-	qboolean	allsolid;	// if true, plane is not valid
-	qboolean	startsolid;	// if true, the initial point was in a solid area
-	float		fraction;	// time completed, 1.0 = didn't hit anything
-	vec3_t		endpos;		// final position
-	cplane_t	plane;		// surface normal at impact
-	csurface_t	*surface;	// surface hit
-	int			contents;	// contents on other side of surface hit
+	qboolean		allsolid;	// if true, plane is not valid
+	qboolean		startsolid;	// if true, the initial point was in a solid area
+	float			fraction;	// time completed, 1.0 = didn't hit anything
+	vec3_t			endpos;		// final position
+	cplane_t		plane;		// surface normal at impact
+	csurface_t		*surface;	// surface hit
+	int				contents;	// contents on other side of surface hit
 	struct edict_s	*ent;		// not set by CM_*() functions
 } trace_t;
 
@@ -518,21 +507,21 @@ typedef struct {
 	qboolean		snapinitial;	// if s has been changed outside pmove
 
 	// results (out)
-	int			numtouch;
+	int				numtouch;
 	struct edict_s	*touchents[ MAXTOUCH ];
 
-	vec3_t		viewangles;			// clamped
-	float		viewheight;
+	vec3_t			viewangles;			// clamped
+	float			viewheight;
 
-	vec3_t		mins, maxs;			// bounding box size
+	vec3_t			mins, maxs;			// bounding box size
 
 	struct edict_s	*groundentity;
-	int			watertype;
-	int			waterlevel;
+	int				watertype;
+	int				waterlevel;
 
 	// callbacks to test the world
-	trace_t( *trace ) ( vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end );
-	int( *pointcontents ) ( vec3_t point );
+	trace_t			( *trace ) ( vec3_t start, vec3_t mins, vec3_t maxs, vec3_t end );
+	int				( *pointcontents ) ( vec3_t point );
 } pmove_t;
 
 
@@ -1058,7 +1047,6 @@ ROGUE - VERSIONS
 9999	08/20/1998		Internal Use
 */
 #define ROGUE_VERSION_ID		1278
-
 #define ROGUE_VERSION_STRING	"08/21/1998 Beta 2 for Ensemble"
 
 // ROGUE
@@ -1070,8 +1058,8 @@ ELEMENTS COMMUNICATED ACROSS THE NET
 ==========================================================
 */
 
-#define	ANGLE2SHORT(x)	((int)((x)*65536/360) & 65535)
-#define	SHORT2ANGLE(x)	((x)*(360.0/65536))
+#define	ANGLE2SHORT( x )	( ( int )( ( x ) * 65536 / 360 ) & 65535 )
+#define	SHORT2ANGLE( x )	( ( x ) * ( 360.0 / 65536 ) )
 
 
 //
@@ -1091,13 +1079,13 @@ ELEMENTS COMMUNICATED ACROSS THE NET
 #define	CS_MAPCHECKSUM		31		// for catching cheater maps
 
 #define	CS_MODELS			32
-#define	CS_SOUNDS			(CS_MODELS+MAX_MODELS)
-#define	CS_IMAGES			(CS_SOUNDS+MAX_SOUNDS)
-#define	CS_LIGHTS			(CS_IMAGES+MAX_IMAGES)
-#define	CS_ITEMS			(CS_LIGHTS+MAX_LIGHTSTYLES)
-#define	CS_PLAYERSKINS		(CS_ITEMS+MAX_ITEMS)
-#define CS_GENERAL			(CS_PLAYERSKINS+MAX_CLIENTS)
-#define	MAX_CONFIGSTRINGS	(CS_GENERAL+MAX_GENERAL)
+#define	CS_SOUNDS			( CS_MODELS + MAX_MODELS )
+#define	CS_IMAGES			( CS_SOUNDS + MAX_SOUNDS )
+#define	CS_LIGHTS			( CS_IMAGES + MAX_IMAGES )
+#define	CS_ITEMS			( CS_LIGHTS + MAX_LIGHTSTYLES )
+#define	CS_PLAYERSKINS		( CS_ITEMS + MAX_ITEMS )
+#define CS_GENERAL			( CS_PLAYERSKINS + MAX_CLIENTS )
+#define	MAX_CONFIGSTRINGS	( CS_GENERAL + MAX_GENERAL )
 
 
 //==============================================
@@ -1123,24 +1111,24 @@ typedef enum {
 // in an update message about entities that the client will
 // need to render in some way
 typedef struct entity_state_s {
-	int		number;			// edict index
+	int			number;			// edict index
 
-	vec3_t	origin;
-	vec3_t	angles;
-	vec3_t	old_origin;		// for lerping
-	int		modelindex;
-	int		modelindex2; 
-	int		modelindex3; 
-	int		modelindex4;	// weapons, CTF flags, etc
-	int		frame;
-	int		skinnum;
-	unsigned int		effects;		// PGM - we're filling it, so it needs to be unsigned
-	int		renderfx;
-	int		solid;			// for client side prediction, 8*(bits 0-4) is x/y radius
+	vec3_t		origin;
+	vec3_t		angles;
+	vec3_t		old_origin;		// for lerping
+	int			modelindex;
+	int			modelindex2; 
+	int			modelindex3; 
+	int			modelindex4;	// weapons, CTF flags, etc
+	int			frame;
+	int			skinnum;
+	unsigned	effects;		// PGM - we're filling it, so it needs to be unsigned
+	int			renderfx;
+	int			solid;			// for client side prediction, 8*(bits 0-4) is x/y radius
 	// 8*(bits 5-9) is z down distance, 8(bits10-15) is z up
 	// gi.linkentity sets this properly
-	int		sound;			// for looping sounds, to guarantee shutoff
-	int		event;			// impulse events -- muzzle flashes, footsteps, etc
+	int			sound;			// for looping sounds, to guarantee shutoff
+	int			event;			// impulse events -- muzzle flashes, footsteps, etc
 	// events only go out for a single frame, they
 	// are automatically cleared each frame
 } entity_state_t;

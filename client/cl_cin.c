@@ -401,14 +401,18 @@ byte *SCR_ReadNextFrame( void ) {
 
 	// read the next frame
 	r = fread( &command, 4, 1, cl.cinematic_file );
-	if ( r == 0 )		// we'll give it one more chance
+	if ( r == 0 ) {		// we'll give it one more chance
 		r = fread( &command, 4, 1, cl.cinematic_file );
+	}
 
-	if ( r != 1 )
+	if ( r != 1 ) {
 		return NULL;
+	}
+
 	command = LittleLong( command );
-	if ( command == 2 )
+	if ( command == 2 ) {
 		return NULL;	// last frame marker
+	}
 
 	if ( command == 1 ) {	// read palette
 		FS_Read( cl.cinematicpalette, sizeof( cl.cinematicpalette ), cl.cinematic_file );
@@ -515,8 +519,7 @@ qboolean SCR_DrawCinematic( void ) {
 	if ( !cin.pic )
 		return true;
 
-	re.DrawStretchRaw( 0, 0, viddef.width, viddef.height,
-		cin.width, cin.height, cin.pic );
+	re.DrawStretchRaw( 0, 0, viddef.width, viddef.height, cin.width, cin.height, cin.pic );
 
 	return true;
 }

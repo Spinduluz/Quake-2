@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 cvar_t	*cl_nodelta;
 
 extern	unsigned	sys_frame_time;
-unsigned	frame_msec;
-unsigned	old_sys_frame_time;
+unsigned			frame_msec;
+unsigned			old_sys_frame_time;
 
 /*
 ===============================================================================
@@ -68,31 +68,36 @@ void KeyDown( kbutton_t *b ) {
 	char	*c;
 
 	c = Cmd_Argv( 1 );
-	if ( c[ 0 ] )
+	if ( c[ 0 ] ) {
 		k = atoi( c );
-	else
+	} else {
 		k = -1;		// typed manually at the console for continuous down
+	}
 
-	if ( k == b->down[ 0 ] || k == b->down[ 1 ] )
+	if ( k == b->down[ 0 ] || k == b->down[ 1 ] ) {
 		return;		// repeating key
+	}
 
-	if ( !b->down[ 0 ] )
+	if ( !b->down[ 0 ] ) {
 		b->down[ 0 ] = k;
-	else if ( !b->down[ 1 ] )
+	} else if ( !b->down[ 1 ] ) {
 		b->down[ 1 ] = k;
-	else {
+	} else {
 		Com_Printf( "Three keys down for a button!\n" );
 		return;
 	}
 
-	if ( b->state & 1 )
+	if ( b->state & 1 ) {
 		return;		// still down
+	}
 
 	// save timestamp
 	c = Cmd_Argv( 2 );
 	b->downtime = atoi( c );
-	if ( !b->downtime )
+
+	if ( !b->downtime ) {
 		b->downtime = sys_frame_time - 100;
+	}
 
 	b->state |= 1 + 2;	// down + impulse down
 }
@@ -103,73 +108,141 @@ void KeyUp( kbutton_t *b ) {
 	unsigned	uptime;
 
 	c = Cmd_Argv( 1 );
-	if ( c[ 0 ] )
+	if ( c[ 0 ] ) {
 		k = atoi( c );
-	else { // typed manually at the console, assume for unsticking, so clear all
+	} else { // typed manually at the console, assume for unsticking, so clear all
 		b->down[ 0 ] = b->down[ 1 ] = 0;
 		b->state = 4;	// impulse up
 		return;
 	}
 
-	if ( b->down[ 0 ] == k )
+	if ( b->down[ 0 ] == k ) {
 		b->down[ 0 ] = 0;
-	else if ( b->down[ 1 ] == k )
+	} else if ( b->down[ 1 ] == k ) {
 		b->down[ 1 ] = 0;
-	else
+	} else {
 		return;		// key up without coresponding down (menu pass through)
-	if ( b->down[ 0 ] || b->down[ 1 ] )
-		return;		// some other key is still holding it down
+	}
 
-	if ( !( b->state & 1 ) )
+	if ( b->down[ 0 ] || b->down[ 1 ] ) {
+		return;		// some other key is still holding it down
+	}
+
+	if ( !( b->state & 1 ) ) {
 		return;		// still up (this should not happen)
+	}
 
 	// save timestamp
 	c = Cmd_Argv( 2 );
 	uptime = atoi( c );
-	if ( uptime )
+
+	if ( uptime ) {
 		b->msec += uptime - b->downtime;
-	else
+	} else {
 		b->msec += 10;
+	}
 
 	b->state &= ~1;		// now up
 	b->state |= 4; 		// impulse up
 }
 
-void IN_KLookDown( void ) { KeyDown( &in_klook ); }
-void IN_KLookUp( void ) { KeyUp( &in_klook ); }
-void IN_UpDown( void ) { KeyDown( &in_up ); }
-void IN_UpUp( void ) { KeyUp( &in_up ); }
-void IN_DownDown( void ) { KeyDown( &in_down ); }
-void IN_DownUp( void ) { KeyUp( &in_down ); }
-void IN_LeftDown( void ) { KeyDown( &in_left ); }
-void IN_LeftUp( void ) { KeyUp( &in_left ); }
-void IN_RightDown( void ) { KeyDown( &in_right ); }
-void IN_RightUp( void ) { KeyUp( &in_right ); }
-void IN_ForwardDown( void ) { KeyDown( &in_forward ); }
-void IN_ForwardUp( void ) { KeyUp( &in_forward ); }
-void IN_BackDown( void ) { KeyDown( &in_back ); }
-void IN_BackUp( void ) { KeyUp( &in_back ); }
-void IN_LookupDown( void ) { KeyDown( &in_lookup ); }
-void IN_LookupUp( void ) { KeyUp( &in_lookup ); }
-void IN_LookdownDown( void ) { KeyDown( &in_lookdown ); }
-void IN_LookdownUp( void ) { KeyUp( &in_lookdown ); }
-void IN_MoveleftDown( void ) { KeyDown( &in_moveleft ); }
-void IN_MoveleftUp( void ) { KeyUp( &in_moveleft ); }
-void IN_MoverightDown( void ) { KeyDown( &in_moveright ); }
-void IN_MoverightUp( void ) { KeyUp( &in_moveright ); }
+void IN_KLookDown( void ) { 
+	KeyDown( &in_klook );
+}
+void IN_KLookUp( void ) { 
+	KeyUp( &in_klook );
+}
+void IN_UpDown( void ) { 
+	KeyDown( &in_up );
+}
+void IN_UpUp( void ) { 
+	KeyUp( &in_up );
+}
+void IN_DownDown( void ) { 
+	KeyDown( &in_down );
+}
+void IN_DownUp( void ) { 
+	KeyUp( &in_down );
+}
+void IN_LeftDown( void ) { 
+	KeyDown( &in_left );
+}
+void IN_LeftUp( void ) {
+	KeyUp( &in_left );
+}
+void IN_RightDown( void ) { 
+	KeyDown( &in_right );
+}
+void IN_RightUp( void ) { 
+	KeyUp( &in_right );
+}
+void IN_ForwardDown( void ) { 
+	KeyDown( &in_forward );
+}
+void IN_ForwardUp( void ) { 
+	KeyUp( &in_forward );
+}
+void IN_BackDown( void ) { 
+	KeyDown( &in_back );
+}
+void IN_BackUp( void ) { 
+	KeyUp( &in_back );
+}
+void IN_LookupDown( void ) {
+	KeyDown( &in_lookup );
+}
+void IN_LookupUp( void ) { 
+	KeyUp( &in_lookup );
+}
+void IN_LookdownDown( void ) { 
+	KeyDown( &in_lookdown );
+}
+void IN_LookdownUp( void ) { 
+	KeyUp( &in_lookdown );
+}
+void IN_MoveleftDown( void ) { 
+	KeyDown( &in_moveleft );
+}
+void IN_MoveleftUp( void ) { 
+	KeyUp( &in_moveleft );
+}
+void IN_MoverightDown( void ) { 
+	KeyDown( &in_moveright );
+}
+void IN_MoverightUp( void ) { 
+	KeyUp( &in_moveright );
+}
 
-void IN_SpeedDown( void ) { KeyDown( &in_speed ); }
-void IN_SpeedUp( void ) { KeyUp( &in_speed ); }
-void IN_StrafeDown( void ) { KeyDown( &in_strafe ); }
-void IN_StrafeUp( void ) { KeyUp( &in_strafe ); }
+void IN_SpeedDown( void ) {
+	KeyDown( &in_speed ); 
+}
+void IN_SpeedUp( void ) { 
+	KeyUp( &in_speed );
+}
+void IN_StrafeDown( void ) { 
+	KeyDown( &in_strafe );
+}
+void IN_StrafeUp( void ) { 
+	KeyUp( &in_strafe );
+}
 
-void IN_AttackDown( void ) { KeyDown( &in_attack ); }
-void IN_AttackUp( void ) { KeyUp( &in_attack ); }
+void IN_AttackDown( void ) { 
+	KeyDown( &in_attack );
+}
+void IN_AttackUp( void ) { 
+	KeyUp( &in_attack );
+}
 
-void IN_UseDown( void ) { KeyDown( &in_use ); }
-void IN_UseUp( void ) { KeyUp( &in_use ); }
+void IN_UseDown( void ) { 
+	KeyDown( &in_use );
+}
+void IN_UseUp( void ) { 
+	KeyUp( &in_use );
+}
 
-void IN_Impulse( void ) { in_impulse = atoi( Cmd_Argv( 1 ) ); }
+void IN_Impulse( void ) { 
+	in_impulse = atoi( Cmd_Argv( 1 ) );
+}
 
 /*
 ===============
@@ -199,10 +272,12 @@ float CL_KeyState( kbutton_t *key ) {
 #endif
 
 	val = ( float )msec / frame_msec;
-	if ( val < 0 )
+	if ( val < 0 ) {
 		val = 0;
-	if ( val > 1 )
+	}
+	if ( val > 1 ) {
 		val = 1;
+	}
 
 	return val;
 }
@@ -235,10 +310,11 @@ void CL_AdjustAngles( void ) {
 	float	speed;
 	float	up, down;
 
-	if ( in_speed.state & 1 )
+	if ( in_speed.state & 1 ) {
 		speed = cls.frametime * cl_anglespeedkey->value;
-	else
+	} else {
 		speed = cls.frametime;
+	}
 
 	if ( !( in_strafe.state & 1 ) ) {
 		cl.viewangles[ YAW ] -= speed*cl_yawspeed->value*CL_KeyState( &in_right );
@@ -299,12 +375,15 @@ void CL_ClampPitch( void ) {
 	float	pitch;
 
 	pitch = SHORT2ANGLE( cl.frame.playerstate.pmove.delta_angles[ PITCH ] );
-	if ( pitch > 180 )
+	if ( pitch > 180 ) {
 		pitch -= 360;
-	if ( cl.viewangles[ PITCH ] + pitch > 89 )
+	}
+	if ( cl.viewangles[ PITCH ] + pitch > 89 ) {
 		cl.viewangles[ PITCH ] = 89 - pitch;
-	if ( cl.viewangles[ PITCH ] + pitch < -89 )
+	}
+	if ( cl.viewangles[ PITCH ] + pitch < -89 ) {
 		cl.viewangles[ PITCH ] = -89 - pitch;
+	}
 }
 
 /*
@@ -319,26 +398,31 @@ void CL_FinishMove( usercmd_t *cmd ) {
 	//
 	// figure button bits
 	//	
-	if ( in_attack.state & 3 )
+	if ( in_attack.state & 3 ) {
 		cmd->buttons |= BUTTON_ATTACK;
+	}
 	in_attack.state &= ~2;
 
-	if ( in_use.state & 3 )
+	if ( in_use.state & 3 ) {
 		cmd->buttons |= BUTTON_USE;
+	}
 	in_use.state &= ~2;
 
-	if ( anykeydown && cls.key_dest == key_game )
+	if ( anykeydown && cls.key_dest == key_game ) {
 		cmd->buttons |= BUTTON_ANY;
+	}
 
 	// send milliseconds of time to apply the move
 	ms = cls.frametime * 1000;
-	if ( ms > 250 )
+	if ( ms > 250 ) {
 		ms = 100;		// time was unreasonable
+	}
 	cmd->msec = ms;
 
 	CL_ClampPitch();
-	for ( i = 0 ; i<3 ; i++ )
+	for ( i = 0 ; i<3 ; i++ ) {
 		cmd->angles[ i ] = ANGLE2SHORT( cl.viewangles[ i ] );
+	}
 
 	cmd->impulse = in_impulse;
 	in_impulse = 0;
@@ -356,10 +440,12 @@ usercmd_t CL_CreateCmd( void ) {
 	usercmd_t	cmd;
 
 	frame_msec = sys_frame_time - old_sys_frame_time;
-	if ( frame_msec < 1 )
+	if ( frame_msec < 1 ) {
 		frame_msec = 1;
-	if ( frame_msec > 200 )
+	}
+	if ( frame_msec > 200 ) {
 		frame_msec = 200;
+	}
 
 	// get basic movement from keyboard
 	CL_BaseMove( &cmd );
@@ -450,12 +536,15 @@ void CL_SendCmd( void ) {
 
 	cl.cmd = *cmd;
 
-	if ( cls.state == ca_disconnected || cls.state == ca_connecting )
+	if ( cls.state == ca_disconnected || cls.state == ca_connecting ) {
 		return;
+	}
 
 	if ( cls.state == ca_connected ) {
-		if ( cls.netchan.message.cursize || curtime - cls.netchan.last_sent > 1000 )
+		if ( cls.netchan.message.cursize || curtime - cls.netchan.last_sent > 1000 ) {
 			Netchan_Transmit( &cls.netchan, 0, buf.data );
+		}
+
 		return;
 	}
 
@@ -468,9 +557,7 @@ void CL_SendCmd( void ) {
 	}
 
 	SZ_Init( &buf, data, sizeof( data ) );
-
-	if ( cmd->buttons && cl.cinematictime > 0 && !cl.attractloop
-		&& cls.realtime - cl.cinematictime > 1000 ) {	// skip the rest of the cinematic
+	if ( cmd->buttons && cl.cinematictime > 0 && !cl.attractloop && cls.realtime - cl.cinematictime > 1000 ) {	// skip the rest of the cinematic
 		SCR_FinishCinematic();
 	}
 
@@ -483,10 +570,11 @@ void CL_SendCmd( void ) {
 
 	// let the server know what the last frame we
 	// got was, so the next message can be delta compressed
-	if ( cl_nodelta->value || !cl.frame.valid || cls.demowaiting )
+	if ( cl_nodelta->value || !cl.frame.valid || cls.demowaiting ) {
 		MSG_WriteLong( &buf, -1 );	// no compression
-	else
+	} else {
 		MSG_WriteLong( &buf, cl.frame.serverframe );
+	}
 
 	// send this and the previous cmds in the message, so
 	// if the last packet was dropped, it can be recovered
@@ -506,9 +594,7 @@ void CL_SendCmd( void ) {
 	MSG_WriteDeltaUsercmd( &buf, oldcmd, cmd );
 
 	// calculate a checksum over the move commands
-	buf.data[ checksumIndex ] = COM_BlockSequenceCRCByte(
-		buf.data + checksumIndex + 1, buf.cursize - checksumIndex - 1,
-		cls.netchan.outgoing_sequence );
+	buf.data[ checksumIndex ] = COM_BlockSequenceCRCByte( buf.data + checksumIndex + 1, buf.cursize - checksumIndex - 1, cls.netchan.outgoing_sequence );
 
 	//
 	// deliver the message

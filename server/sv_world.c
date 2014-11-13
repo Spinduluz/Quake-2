@@ -33,16 +33,15 @@ FIXME: this use of "area" is different from the bsp file use
 // (type *)STRUCT_FROM_LINK(link_t *link, type, member)
 // ent = STRUCT_FROM_LINK(link,entity_t,order)
 // FIXME: remove this mess!
-#define	STRUCT_FROM_LINK(l,t,m) ((t *)((byte *)l - (int)&(((t *)0)->m)))
-
-#define	EDICT_FROM_AREA(l) STRUCT_FROM_LINK(l,edict_t,area)
+#define	STRUCT_FROM_LINK( l, t, m ) ( ( t * )( ( byte * )l - ( int )&( ( ( t * )0 )->m ) ) )
+#define	EDICT_FROM_AREA( l )		STRUCT_FROM_LINK( l, edict_t,area )
 
 typedef struct areanode_s {
-	int		axis;		// -1 = leaf node
-	float	dist;
+	int					axis;		// -1 = leaf node
+	float				dist;
 	struct areanode_s	*children[ 2 ];
-	link_t	trigger_edicts;
-	link_t	solid_edicts;
+	link_t				trigger_edicts;
+	link_t				solid_edicts;
 } areanode_t;
 
 #define	AREA_DEPTH	4
@@ -53,7 +52,8 @@ int			sv_numareanodes;
 
 float	*area_mins, *area_maxs;
 edict_t	**area_list;
-int		area_count, area_maxcount;
+int		area_count;
+int		area_maxcount;
 int		area_type;
 
 int SV_HullForEntity( edict_t *ent );
@@ -101,10 +101,11 @@ areanode_t *SV_CreateAreaNode( int depth, vec3_t mins, vec3_t maxs ) {
 	}
 
 	VectorSubtract( maxs, mins, size );
-	if ( size[ 0 ] > size[ 1 ] )
+	if ( size[ 0 ] > size[ 1 ] ) {
 		anode->axis = 0;
-	else
+	} else {
 		anode->axis = 1;
+	}
 
 	anode->dist = 0.5 * ( maxs[ anode->axis ] + mins[ anode->axis ] );
 	VectorCopy( mins, mins1 );
@@ -140,8 +141,9 @@ SV_UnlinkEdict
 ===============
 */
 void SV_UnlinkEdict( edict_t *ent ) {
-	if ( !ent->area.prev )
+	if ( !ent->area.prev ) {
 		return;		// not linked in anywhere
+	}
 	RemoveLink( &ent->area );
 	ent->area.prev = ent->area.next = NULL;
 }
@@ -163,14 +165,17 @@ void SV_LinkEdict( edict_t *ent ) {
 	int			area;
 	int			topnode;
 
-	if ( ent->area.prev )
+	if ( ent->area.prev ) {
 		SV_UnlinkEdict( ent );	// unlink from old position
+	}
 
-	if ( ent == ge->edicts )
+	if ( ent == ge->edicts ) {
 		return;		// don't add the world
+	}
 
-	if ( !ent->inuse )
+	if ( !ent->inuse ) {
 		return;
+	}
 
 	// set the size
 	VectorSubtract( ent->maxs, ent->mins, ent->size );
@@ -178,45 +183,53 @@ void SV_LinkEdict( edict_t *ent ) {
 	// encode the size into the entity_state for client prediction
 	if ( ent->solid == SOLID_BBOX && !( ent->svflags & SVF_DEADMONSTER ) ) {	// assume that x/y are equal and symetric
 		i = ent->maxs[ 0 ] / 8;
-		if ( i<1 )
+		if ( i < 1 ) {
 			i = 1;
-		if ( i>31 )
+		}
+		if ( i > 31 ) {
 			i = 31;
+		}
 
 		// z is not symetric
 		j = ( -ent->mins[ 2 ] ) / 8;
-		if ( j<1 )
+		if ( j < 1 ) {
 			j = 1;
-		if ( j>31 )
+		}
+		if ( j > 31 ) {
 			j = 31;
+		}
 
 		// and z maxs can be negative...
 		k = ( ent->maxs[ 2 ] + 32 ) / 8;
-		if ( k<1 )
+		if ( k < 1 ) {
 			k = 1;
-		if ( k>63 )
+		}
+		if ( k > 63 ) {
 			k = 63;
+		}
 
 		ent->s.solid = ( k << 10 ) | ( j << 5 ) | i;
 	} else if ( ent->solid == SOLID_BSP ) {
 		ent->s.solid = 31;		// a solid_bbox will never create this value
-	} else
+	} else {
 		ent->s.solid = 0;
+	}
 
 	// set the abs box
-	if ( ent->solid == SOLID_BSP &&
-		( ent->s.angles[ 0 ] || ent->s.angles[ 1 ] || ent->s.angles[ 2 ] ) ) {	// expand for rotation
+	if ( ent->solid == SOLID_BSP && ( ent->s.angles[ 0 ] || ent->s.angles[ 1 ] || ent->s.angles[ 2 ] ) ) {	// expand for rotation
 		float		max, v;
 		int			i;
 
 		max = 0;
 		for ( i = 0 ; i<3 ; i++ ) {
 			v = fabs( ent->mins[ i ] );
-			if ( v > max )
+			if ( v > max ) {
 				max = v;
+			}
 			v = fabs( ent->maxs[ i ] );
-			if ( v > max )
+			if ( v > max ) {
 				max = v;
+			}
 		}
 		for ( i = 0 ; i<3 ; i++ ) {
 			ent->absmin[ i ] = ent->s.origin[ i ] - max;
@@ -242,22 +255,23 @@ void SV_LinkEdict( edict_t *ent ) {
 	ent->areanum2 = 0;
 
 	//get all leafs, including solids
-	num_leafs = CM_BoxLeafnums( ent->absmin, ent->absmax,
-		leafs, MAX_TOTAL_ENT_LEAFS, &topnode );
+	num_leafs = CM_BoxLeafnums( ent->absmin, ent->absmax, leafs, MAX_TOTAL_ENT_LEAFS, &topnode );
 
 	// set areas
 	for ( i = 0 ; i<num_leafs ; i++ ) {
 		clusters[ i ] = CM_LeafCluster( leafs[ i ] );
 		area = CM_LeafArea( leafs[ i ] );
-		if ( area ) {	// doors may legally straggle two areas,
+		if ( area ) {	
+			// doors may legally straggle two areas,
 			// but nothing should evern need more than that
 			if ( ent->areanum && ent->areanum != area ) {
-				if ( ent->areanum2 && ent->areanum2 != area && sv.state == ss_loading )
-					Com_DPrintf( "Object touching 3 areas at %f %f %f\n",
-					ent->absmin[ 0 ], ent->absmin[ 1 ], ent->absmin[ 2 ] );
+				if ( ent->areanum2 && ent->areanum2 != area && sv.state == ss_loading ) {
+					Com_DPrintf( "Object touching 3 areas at %f %f %f\n", ent->absmin[ 0 ], ent->absmin[ 1 ], ent->absmin[ 2 ] );
+				}
 				ent->areanum2 = area;
-			} else
+			} else {
 				ent->areanum = area;
+			}
 		}
 	}
 
@@ -267,11 +281,14 @@ void SV_LinkEdict( edict_t *ent ) {
 	} else {
 		ent->num_clusters = 0;
 		for ( i = 0 ; i<num_leafs ; i++ ) {
-			if ( clusters[ i ] == -1 )
+			if ( clusters[ i ] == -1 ) {
 				continue;		// not a visible leaf
-			for ( j = 0 ; j<i ; j++ )
-				if ( clusters[ j ] == clusters[ i ] )
+			}
+			for ( j = 0 ; j<i ; j++ ) {
+				if ( clusters[ j ] == clusters[ i ] ) {
 					break;
+				}
+			}
 			if ( j == i ) {
 				if ( ent->num_clusters == MAX_ENT_CLUSTERS ) {	// assume we missed some leafs, and mark by headnode
 					ent->num_clusters = -1;
@@ -290,27 +307,31 @@ void SV_LinkEdict( edict_t *ent ) {
 	}
 	ent->linkcount++;
 
-	if ( ent->solid == SOLID_NOT )
+	if ( ent->solid == SOLID_NOT ) {
 		return;
+	}
 
 	// find the first node that the ent's box crosses
 	node = sv_areanodes;
 	while ( 1 ) {
-		if ( node->axis == -1 )
+		if ( node->axis == -1 ) {
 			break;
-		if ( ent->absmin[ node->axis ] > node->dist )
+		}
+		if ( ent->absmin[ node->axis ] > node->dist ) {
 			node = node->children[ 0 ];
-		else if ( ent->absmax[ node->axis ] < node->dist )
+		} else if ( ent->absmax[ node->axis ] < node->dist ) {
 			node = node->children[ 1 ];
-		else
+		} else {
 			break;		// crosses the node
+		}
 	}
 
 	// link it in	
-	if ( ent->solid == SOLID_TRIGGER )
+	if ( ent->solid == SOLID_TRIGGER ) {
 		InsertLinkBefore( &ent->area, &node->trigger_edicts );
-	else
+	} else {
 		InsertLinkBefore( &ent->area, &node->solid_edicts );
+	}
 
 }
 

@@ -224,27 +224,34 @@ void VID_MenuInit( void ) {
 	};
 	int i;
 
-	if ( !gl_driver )
+	if ( !gl_driver ) {
 		gl_driver = Cvar_Get( "gl_driver", "opengl32", 0 );
-	if ( !gl_picmip )
+	}
+	if ( !gl_picmip ) {
 		gl_picmip = Cvar_Get( "gl_picmip", "0", 0 );
-	if ( !gl_mode )
+	}
+	if ( !gl_mode ) {
 		gl_mode = Cvar_Get( "gl_mode", "3", 0 );
-	if ( !sw_mode )
+	}
+	if ( !sw_mode ) {
 		sw_mode = Cvar_Get( "sw_mode", "0", 0 );
-	if ( !gl_ext_palettedtexture )
+	}
+	if ( !gl_ext_palettedtexture ) {
 		gl_ext_palettedtexture = Cvar_Get( "gl_ext_palettedtexture", "1", CVAR_ARCHIVE );
-	if ( !gl_finish )
+	}
+	if ( !gl_finish ) {
 		gl_finish = Cvar_Get( "gl_finish", "0", CVAR_ARCHIVE );
-
-	if ( !sw_stipplealpha )
+	}
+	if ( !sw_stipplealpha ) {
 		sw_stipplealpha = Cvar_Get( "sw_stipplealpha", "0", CVAR_ARCHIVE );
+	}
 
 	s_mode_list[ SOFTWARE_MENU ].curvalue = sw_mode->value;
 	s_mode_list[ OPENGL_MENU ].curvalue = gl_mode->value;
 
-	if ( !scr_viewsize )
+	if ( !scr_viewsize ) {
 		scr_viewsize = Cvar_Get( "viewsize", "100", CVAR_ARCHIVE );
+	}
 
 	s_screensize_slider[ SOFTWARE_MENU ].curvalue = scr_viewsize->value / 10;
 	s_screensize_slider[ OPENGL_MENU ].curvalue = scr_viewsize->value / 10;
@@ -254,15 +261,17 @@ void VID_MenuInit( void ) {
 		s_ref_list[ 0 ].curvalue = s_ref_list[ 1 ].curvalue = REF_SOFT;
 	} else if ( strcmp( vid_ref->string, "gl" ) == 0 ) {
 		s_current_menu_index = OPENGL_MENU;
-		if ( strcmp( gl_driver->string, "3dfxgl" ) == 0 )
+
+		if ( strcmp( gl_driver->string, "3dfxgl" ) == 0 ) {
 			s_ref_list[ s_current_menu_index ].curvalue = REF_3DFX;
-		else if ( strcmp( gl_driver->string, "pvrgl" ) == 0 )
+		} else if ( strcmp( gl_driver->string, "pvrgl" ) == 0 ) {
 			s_ref_list[ s_current_menu_index ].curvalue = REF_POWERVR;
-		else if ( strcmp( gl_driver->string, "opengl32" ) == 0 )
+		} else if ( strcmp( gl_driver->string, "opengl32" ) == 0 ) {
 			s_ref_list[ s_current_menu_index ].curvalue = REF_OPENGL;
-		else
+		} else {
 			//			s_ref_list[s_current_menu_index].curvalue = REF_VERITE;
 			s_ref_list[ s_current_menu_index ].curvalue = REF_OPENGL;
+		}
 	}
 
 	s_software_menu.x = viddef.width * 0.50;
@@ -373,6 +382,7 @@ void VID_MenuInit( void ) {
 
 	Menu_Center( &s_software_menu );
 	Menu_Center( &s_opengl_menu );
+
 	s_opengl_menu.x -= 8;
 	s_software_menu.x -= 8;
 }
@@ -385,10 +395,11 @@ VID_MenuDraw
 void VID_MenuDraw( void ) {
 	int w, h;
 
-	if ( s_current_menu_index == 0 )
+	if ( s_current_menu_index == 0 ) {
 		s_current_menu = &s_software_menu;
-	else
+	} else {
 		s_current_menu = &s_opengl_menu;
+	}
 
 	/*
 	** draw the banner
